@@ -1,0 +1,111 @@
+/* Dark mode variables */
+[data-theme="dark"] {
+    --primary-color: #818cf8;
+    --primary-hover: #6366f1;
+    --bg-color: #1e1e2e;
+    --card-bg: #2a2a3c;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --border-color: #3f3f5c;
+}
+
+/* Dark mode specific styles */
+[data-theme="dark"] .navbar {
+    background-color: rgba(42, 42, 60, 0.95);
+    backdrop-filter: blur(8px);
+}
+
+[data-theme="dark"] .form-control {
+    background-color: #2a2a3c;
+    border-color: #3f3f5c;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .form-control:focus {
+    background-color: #2a2a3c;
+    border-color: #818cf8;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .form-control::placeholder {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .upload-area {
+    background-color: #2a2a3c;
+    border-color: #3f3f5c;
+}
+
+[data-theme="dark"] .upload-area:hover {
+    border-color: #818cf8;
+    background-color: #2d2d40;
+}
+
+[data-theme="dark"] .task-card,
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .contact-card {
+    background-color: #2a2a3c;
+    border-color: #3f3f5c;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    width: 48px;
+    height: 24px;
+    border-radius: 12px;
+    background-color: #e2e8f0;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s var(--animation-timing);
+    margin-left: 1rem;
+}
+
+.theme-toggle::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: white;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s var(--animation-timing);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle.dark {
+    background-color: #818cf8;
+}
+
+.theme-toggle.dark::before {
+    transform: translateX(24px);
+    background-color: #2a2a3c;
+}
+
+.theme-toggle .icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    transition: all 0.3s var(--animation-timing);
+}
+
+.theme-toggle .sun-icon {
+    left: 6px;
+    color: #fbbf24;
+    opacity: 1;
+}
+
+.theme-toggle .moon-icon {
+    right: 6px;
+    color: #818cf8;
+    opacity: 0;
+}
+
+.theme-toggle.dark .sun-icon {
+    opacity: 0;
+}
+
+.theme-toggle.dark .moon-icon {
+    opacity: 1;
+}

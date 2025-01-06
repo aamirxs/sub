@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subtitle Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .hero-section h1 {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .hero-section p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .upload-area {
+            background-color: var(--card-bg);
+            border: 2px dashed var(--border-color);
+            border-radius: 1rem;
+            padding: 2.5rem;
+            text-align: center;
+            margin: 2rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: #f8fafc;
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary-color);
+            background-color: #f1f5f9;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .upload-hint {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .language-select {
+            max-width: 300px;
+            margin: 1rem auto;
+        }
+
+        .task-card {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .task-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .progress {
+            height: 0.5rem;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            background-color: var(--primary-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+        }
+
+        .form-select {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border-color: var(--border-color);
+        }
+
+        .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+        }
+
+        .file-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--bg-color);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .file-info p {
+            margin: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        .file-info .selected-file-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .file-info .estimate-time {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .upload-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            text-align: center;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 2rem;
+            background-color: var(--bg-color);
+            border: 2px dashed var(--border-color);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(79, 70, 229, 0.1);
+        }
+
+        .file-upload-label i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .error-message {
+            color: #dc2626;
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-closed-captioning me-2"></i>
+                Subtitle Generator
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('terms') }}">Terms</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="hero-section">
+            <h1>Generate Subtitles Easily</h1>
+            <p>Upload your video and get accurate subtitles in multiple formats. Supports various languages and video formats.</p>
+        </div>
+
+        <div class="upload-form-container">
+            <form id="uploadForm" class="upload-form">
+                <div class="file-upload-wrapper">
+                    <label for="video" class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Choose a video file or drag it here</span>
+                    </label>
+                    <input type="file" id="video" name="video" accept=".mp4,.avi,.mov,.mkv,.webm" class="file-upload-input" required>
+                    <div id="fileInfo" class="file-info" style="display: none;">
+                        <p class="selected-file-name"></p>
+                        <p class="selected-file-size"></p>
+                        <p class="estimate-time"></p>
+                    </div>
+                </div>
+
+                <div class="language-select mt-3">
+                    <label for="language" class="form-label">Select Language</label>
+                    <select class="form-select" id="language" name="language" required>
+                        {% for code, name in languages.items() %}
+                        <option value="{{ code }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-upload me-2"></i>Generate Subtitles
+                    </button>
+                </div>
+                <div id="error-message" class="error-message"></div>
+            </form>
+        </div>
+
+        <div id="taskContainer" class="task-container mt-4">
+            <!-- Task cards will be inserted here -->
+        </div>
+
+        <script>
+            // Global function for downloading subtitles
+            function downloadSubtitle(taskId, format) {
+                try {
+                    window.location.href = `/download/${taskId}/${format}`;
+                } catch (error) {
+                    console.error('Download error:', error);
+                    const errorDiv = document.getElementById(`error-${taskId}`);
+                    if (errorDiv) {
+                        errorDiv.style.display = 'block';
+                        errorDiv.textContent = 'Error downloading subtitle';
+                    }
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('uploadForm');
+                const fileInput = document.getElementById('video');
+                const fileInfo = document.getElementById('fileInfo');
+                const fileNameDisplay = fileInfo.querySelector('.selected-file-name');
+                const fileSizeDisplay = fileInfo.querySelector('.selected-file-size');
+                const estimateTimeDisplay = fileInfo.querySelector('.estimate-time');
+                const submitBtn = document.getElementById('submitBtn');
+                
+                function formatFileSize(bytes) {
+                    if (bytes === 0) return '0 Bytes';
+                    const k = 1024;
+                    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+                }
+
+                fileInput.addEventListener('change', async function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        fileInfo.style.display = 'block';
+                        fileNameDisplay.textContent = `File: ${file.name}`;
+                        fileSizeDisplay.textContent = `Size: ${formatFileSize(file.size)}`;
+                        
+                        try {
+                            const response = await fetch('/estimate_time', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    file_size: file.size
+                                })
+                            });
+                            
+                            if (response.ok) {
+                                const data = await response.json();
+                                estimateTimeDisplay.textContent = `Estimated processing time: ${data.estimate_readable}`;
+                                estimateTimeDisplay.style.display = 'block';
+                            } else {
+                                estimateTimeDisplay.style.display = 'none';
+                            }
+                        } catch (error) {
+                            console.error('Error getting time estimate:', error);
+                            estimateTimeDisplay.style.display = 'none';
+                        }
+                    } else {
+                        fileInfo.style.display = 'none';
+                    }
+                });
+
+                async function handleFileUpload(file) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('language', document.getElementById('language').value);
+
+                    const errorDiv = document.getElementById('error-message');
+                    errorDiv.classList.remove('show');
+                    errorDiv.textContent = '';
+
+                    try {
+                        const response = await fetch('/upload', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            throw new Error(data.error || 'An error occurred while uploading the file');
+                        }
+
+                        // Create task card and start polling
+                        createTaskCard(data.task_id, file.name);
+                        pollTaskStatus(data.task_id);
+
+                    } catch (error) {
+                        console.error('Upload error:', error);
+                        errorDiv.textContent = error.message;
+                        errorDiv.classList.add('show');
+                    }
+                }
+
+                // Handle form submission
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const file = fileInput.files[0];
+                    if (!file) {
+                        alert('Please select a video file');
+                        return;
+                    }
+
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+
+                    await handleFileUpload(file);
+
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-upload me-2"></i>Generate Subtitles';
+                });
+
+                // Drag and drop handling
+                const dropZone = document.querySelector('.file-upload-wrapper');
+
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('dragover');
+                });
+
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.classList.remove('dragover');
+                });
+
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        fileInput.files = files;
+                        fileInput.dispatchEvent(new Event('change'));
+                    }
+                });
+
+                function createTaskCard(taskId, filename) {
+                    const cardHtml = `
+                        <div class="task-card" id="task-${taskId}">
+                            <div class="task-header">
+                                <h5 class="task-title">${filename}</h5>
+                                <div class="task-status" id="status-${taskId}">Starting...</div>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar" id="progress-${taskId}" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="detected-language mb-2" id="detected-language-${taskId}" style="display: none;">
+                                <strong>Detected Language:</strong> <span class="language-value"></span>
+                            </div>
+                            <div class="task-actions" id="actions-${taskId}" style="display: none;">
+                                <div class="mb-2">
+                                    <strong>English Subtitles:</strong>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="downloadSubtitle('${taskId}', 'en_srt')">SRT</button>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="downloadSubtitle('${taskId}', 'en_vtt')">VTT</button>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="downloadSubtitle('${taskId}', 'en_ass')">ASS</button>
+                                    </div>
+                                </div>
+                                <div id="original-subtitles-${taskId}" class="mb-2" style="display: none;">
+                                    <strong>Original Subtitles:</strong>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-outline-secondary original-download-btn" data-format="srt">SRT</button>
+                                        <button class="btn btn-sm btn-outline-secondary original-download-btn" data-format="vtt">VTT</button>
+                                        <button class="btn btn-sm btn-outline-secondary original-download-btn" data-format="ass">ASS</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="task-error" id="error-${taskId}" style="display: none;"></div>
+                        </div>
+                    `;
+                    document.getElementById('taskContainer').insertAdjacentHTML('afterbegin', cardHtml);
+                }
+
+                function updateTaskStatus(taskId, status) {
+                    const statusElement = document.getElementById(`status-${taskId}`);
+                    const progressBar = document.getElementById(`progress-${taskId}`);
+                    const actionsDiv = document.getElementById(`actions-${taskId}`);
+                    const errorDiv = document.getElementById(`error-${taskId}`);
+                    const detectedLanguageDiv = document.getElementById(`detected-language-${taskId}`);
+                    const originalSubtitlesDiv = document.getElementById(`original-subtitles-${taskId}`);
+
+                    if (!statusElement || !progressBar) return;
+
+                    if (status.status === 'detecting_language') {
+                        statusElement.textContent = 'Detecting Language...';
+                    } else if (status.status === 'transcribing') {
+                        statusElement.textContent = 'Transcribing...';
+                    } else if (status.status === 'translating') {
+                        statusElement.textContent = 'Translating to English...';
+                    } else if (status.status === 'processing') {
+                        statusElement.textContent = 'Processing...';
+                    } else if (status.status === 'completed') {
+                        statusElement.textContent = 'Completed';
+                        if (actionsDiv) {
+                            actionsDiv.style.display = 'block';
+                            
+                            // Show original language subtitles if translation exists
+                            if (status.has_translation && originalSubtitlesDiv) {
+                                originalSubtitlesDiv.style.display = 'block';
+                                const detectedLang = status.detected_language.toLowerCase().split(' ')[0];
+                                
+                                // Add click handlers to original language buttons
+                                const buttons = originalSubtitlesDiv.querySelectorAll('.original-download-btn');
+                                buttons.forEach(button => {
+                                    const format = button.dataset.format;
+                                    button.onclick = function() {
+                                        downloadSubtitle(taskId, `${detectedLang}_${format}`);
+                                    };
+                                });
+                            }
+                        }
+                    } else if (status.status === 'error') {
+                        statusElement.textContent = 'Error';
+                        if (errorDiv) {
+                            errorDiv.style.display = 'block';
+                            errorDiv.textContent = status.error || 'An error occurred';
+                        }
+                    }
+
+                    if (status.detected_language && detectedLanguageDiv) {
+                        detectedLanguageDiv.style.display = 'block';
+                        detectedLanguageDiv.querySelector('.language-value').textContent = status.detected_language;
+                    }
+
+                    if (status.progress !== undefined) {
+                        progressBar.style.width = `${status.progress}%`;
+                        progressBar.setAttribute('aria-valuenow', status.progress);
+                    }
+                }
+
+                async function pollTaskStatus(taskId) {
+                    try {
+                        const response = await fetch(`/task/${taskId}/status`);
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch task status');
+                        }
+
+                        const status = await response.json();
+                        
+                        if (status.error) {
+                            throw new Error(status.error);
+                        }
+                        
+                        updateTaskStatus(taskId, status);
+
+                        if (status.status !== 'completed' && status.status !== 'error') {
+                            setTimeout(() => pollTaskStatus(taskId), 1000);
+                        }
+                    } catch (error) {
+                        console.error('Error polling task status:', error);
+                        const errorDiv = document.getElementById(`error-${taskId}`);
+                        if (errorDiv) {
+                            errorDiv.style.display = 'block';
+                            errorDiv.textContent = error.message || 'Error checking task status';
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
